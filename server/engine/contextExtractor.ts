@@ -1,8 +1,41 @@
 import { IncidentContext } from '../types.js';
 
+/**
+ * ContextExtractorAgent — Intelligent NLP-based Context & SLA Parser
+ *
+ * Derives structured incident metadata from raw free-text inputs using
+ * pattern-matching rules compiled at module load time for O(1) repeated lookups.
+ * Part of NexusFlow's Multi-Agent DAG pipeline (Stage 2 of 5).
+ *
+ * @module contextExtractor
+ */
 export class ContextExtractorAgent {
   /**
-   * Deep context extraction based on user input, domain patterns, and metadata
+   * Extracts structured incident context from a support ticket title and body.
+   *
+   * Performs three classification passes:
+   * 1. **Customer Tier** — detects Platinum / Gold / Silver from account keywords
+   * 2. **System Impact** — classifies Full Outage / Degraded Performance / Billing Dispute / General Query
+   * 3. **Sentiment** — detects Frustrated/Urgent / Inquiry / Neutral emotional register
+   *
+   * Time complexity: O(n) where n = combined string length (single-pass regex evaluation).
+   * Space complexity: O(1) — no heap allocation proportional to input.
+   *
+   * @param title - Short incident title (e.g. "Payment Gateway Down")
+   * @param input - Full incident description from customer
+   * @returns Structured {@link IncidentContext} with tier, SLA, sentiment, and intent fields
+   *
+   * @example
+   * ```ts
+   * const ctx = ContextExtractorAgent.extractContext(
+   *   'Production Outage',
+   *   'Our enterprise account cannot process payments — full outage across all regions.'
+   * );
+   * // ctx.customerTier  === 'Enterprise (Platinum)'
+   * // ctx.slaMinutes    === 15
+   * // ctx.systemImpact  === 'Full Outage'
+   * // ctx.sentiment     === 'Neutral'
+   * ```
    */
   public static extractContext(title: string, input: string): IncidentContext {
     const combined = `${title} ${input}`.toLowerCase();

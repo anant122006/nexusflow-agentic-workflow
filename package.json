@@ -12,7 +12,10 @@
     "build:server": "tsc -p tsconfig.server.json",
     "build": "npm run build:client",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "clsx": "^2.1.1",
