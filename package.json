@@ -1,0 +1,53 @@
+{
+  "name": "nexusflow-agentic-workflow",
+  "version": "1.0.0",
+  "description": "NexusFlow - Enterprise Agentic Workflow Automation Engine with Dynamic Context-Aware Decision Routing, Prompt Guardrails, and WCAG 2.1 AA Accessibility",
+  "main": "server/index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx server/index.ts",
+    "start": "tsx server/index.ts",
+    "dev:client": "vite",
+    "build:client": "vite build",
+    "build:server": "tsc -p tsconfig.server.json",
+    "build": "npm run build:client",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "lucide-react": "^0.468.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.5.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16",
+    "vite": "^6.0.3",
+    "vitest": "^2.1.8"
+  },
+  "keywords": [
+    "agentic-workflow",
+    "workflow-automation",
+    "multi-agent",
+    "decision-intelligence",
+    "hackathon-winner",
+    "wcag-aa"
+  ],
+  "author": "NexusFlow Team",
+  "license": "MIT"
+}
