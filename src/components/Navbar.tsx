@@ -1,5 +1,5 @@
 import React from 'react';
-import { Workflow, ShieldCheck, Zap, CheckCircle2, Eye, AlertTriangle } from 'lucide-react';
+import { Workflow, ShieldCheck, Zap, CheckCircle2, Eye, AlertTriangle, Globe, Network } from 'lucide-react';
 
 interface NavbarProps {
   onOpenA11yModal: () => void;
@@ -44,6 +44,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenA11yModal, onOpenHITLModal
           <span className="flex items-center gap-1 px-2.5 py-1 rounded bg-slate-800 border border-slate-700 text-emerald-400 font-medium">
             <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
             <span>External actions: simulated</span>
+          </span>
+          <span className="flex items-center gap-1 px-2.5 py-1 rounded bg-slate-800 border border-slate-700 text-cyan-300 font-medium">
+            <Globe className="w-3.5 h-3.5 text-cyan-400" aria-hidden="true" />
+            <span>TinyFish: Web Agent</span>
+          </span>
+          <span className="flex items-center gap-1 px-2.5 py-1 rounded bg-slate-800 border border-slate-700 text-purple-300 font-medium">
+            <Network className="w-3.5 h-3.5 text-purple-400" aria-hidden="true" />
+            <span>n8n: Workflow Hub</span>
           </span>
           <button
             onClick={onOpenA11yModal}

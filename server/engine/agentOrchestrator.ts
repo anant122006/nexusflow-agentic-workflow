@@ -12,6 +12,8 @@ import { ContextExtractorAgent } from './contextExtractor.js';
 import { DecisionIntelligenceEngine } from './decisionEngine.js';
 import { EnterpriseToolDispatcher } from './toolDispatchers.js';
 import { WorkflowDAGEngine } from './workflowDAG.js';
+import { TinyFishAgent } from './tinyfishAgent.js';
+import { N8nWorkflowDispatcher } from './n8nDispatcher.js';
 
 /**
  * Enterprise Agentic Workflow Orchestrator
@@ -94,6 +96,21 @@ export class AgenticWorkflowOrchestrator {
     // 5. Tool Action Dispatching (Parameter: Real-world Usability)
     log('ActionDispatcher', 'info', 'Dispatching actions to enterprise integrations (Jira, Slack, Cloud, Email)...');
     const actionsDispatched = EnterpriseToolDispatcher.dispatchActions(context, decision);
+
+    // 6. TinyFish AI Web Agent Autonomous Investigation
+    log('TinyFishAgent', 'info', 'Spawning TinyFish headless browser agent in cloud fleet to inspect live web endpoint...');
+    const tinyfishReport = await TinyFishAgent.investigateWebTarget(context);
+    log('TinyFishAgent', tinyfishReport.status === 'OUTAGE_VERIFIED' ? 'warn' : 'success',
+      `TinyFish inspection verdict: [${tinyfishReport.status}] — HTTP ${tinyfishReport.httpStatus} (${tinyfishReport.latencyMs}ms). ${tinyfishReport.domFinding}`);
+    actionsDispatched.push(TinyFishAgent.createActionPayload(tinyfishReport));
+
+    // 7. n8n Enterprise Workflow Synchronization
+    log('n8nWorkflow', 'info', 'Triggering n8n enterprise orchestrator pipeline & webhook...');
+    const n8nSyncReport = await N8nWorkflowDispatcher.dispatchToN8n(context, decision, actionsDispatched);
+    log('n8nWorkflow', 'success',
+      `n8n workflow triggered: [${n8nSyncReport.workflowId}] with ${n8nSyncReport.connectedNodes.length} enterprise nodes.`);
+    actionsDispatched.push(N8nWorkflowDispatcher.createActionPayload(n8nSyncReport, context));
+
     actionsDispatched.forEach(act => {
       log('ActionDispatcher', act.status === 'HELD_FOR_APPROVAL' ? 'warn' : 'success', `${act.actionType} $\\rightarrow$ ${act.targetDestination} [Status: ${act.status}]`);
     });
@@ -117,6 +134,8 @@ export class AgenticWorkflowOrchestrator {
       nodes,
       actionsDispatched,
       executionTimeMs,
+      tinyfishReport,
+      n8nSyncReport,
       logs
     };
 

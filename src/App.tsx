@@ -7,13 +7,14 @@ import { AgentExecutionLog } from './components/AgentExecutionLog';
 import { SecurityGuardrailView } from './components/SecurityGuardrailView';
 import { HumanInTheLoopModal } from './components/HumanInTheLoopModal';
 import { AccessibilityModal } from './components/AccessibilityModal';
+import { IntegrationsView } from './components/IntegrationsView';
 import { WorkflowResult } from './types';
-import { Zap, Shield, Terminal, Database, CheckCircle2, AlertTriangle, ArrowRight } from 'lucide-react';
+import { Zap, Shield, Terminal, Database, CheckCircle2, AlertTriangle, ArrowRight, Globe, Network } from 'lucide-react';
 
 export const App: React.FC = () => {
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [result, setResult] = useState<WorkflowResult | null>(null);
-  const [activeTab, setActiveTab] = useState<'decision' | 'security' | 'trace' | 'context'>('decision');
+  const [activeTab, setActiveTab] = useState<'decision' | 'security' | 'trace' | 'context' | 'integrations'>('decision');
   const [isA11yModalOpen, setIsA11yModalOpen] = useState<boolean>(false);
   const [isHITLModalOpen, setIsHITLModalOpen] = useState<boolean>(false);
 
@@ -157,6 +158,25 @@ export const App: React.FC = () => {
                 <Database className="w-4 h-4" />
                 <span>Context & SLA Extraction</span>
               </button>
+
+              <button
+                role="tab"
+                aria-selected={activeTab === 'integrations'}
+                onClick={() => setActiveTab('integrations')}
+                className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold border-b-2 transition ${
+                  activeTab === 'integrations'
+                    ? 'border-brand-500 text-brand-400 bg-brand-500/5'
+                    : 'border-transparent text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                <Globe className="w-4 h-4 text-cyan-400" />
+                <span>TinyFish & n8n Hub</span>
+                {result?.tinyfishReport && (
+                  <span className="px-1.5 py-0.2 rounded-full bg-cyan-500/20 text-cyan-300 text-[10px] font-bold">
+                    CONNECTED
+                  </span>
+                )}
+              </button>
             </div>
 
             {isWaitingApproval && (
@@ -246,6 +266,13 @@ export const App: React.FC = () => {
                   <p className="text-xs text-slate-500 italic">No context extracted yet.</p>
                 )}
               </div>
+            )}
+
+            {activeTab === 'integrations' && (
+              <IntegrationsView
+                tinyfishReport={result?.tinyfishReport}
+                n8nSyncReport={result?.n8nSyncReport}
+              />
             )}
           </div>
         </div>

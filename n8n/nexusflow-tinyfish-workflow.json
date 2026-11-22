@@ -1,0 +1,88 @@
+{
+  "name": "NexusFlow Enterprise Incident Triage with TinyFish Web Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nexusflow-incident",
+        "options": {}
+      },
+      "id": "11111111-1111-1111-1111-111111111111",
+      "name": "NexusFlow Incident Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://api.tinyfish.ai/v1/run",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"url\": $json.body.incident.targetUrl || \"https://checkout.enterprise-cloud.net/api/v2\",\n  \"goal\": \"Inspect endpoint availability, error banners, and latency symptoms\",\n  \"max_steps\": 5\n}"
+      },
+      "id": "22222222-2222-2222-2222-222222222222",
+      "name": "TinyFish AI Web Agent Node",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "channel": "#incident-war-room",
+        "text": "=🚨 *NexusFlow × n8n Sev-1 Alert*\n*Incident:* {{$json.body.incident.title}}\n*Tier:* {{$json.body.incident.customerTier}}\n*TinyFish Verdict:* {{$node[\"TinyFish AI Web Agent Node\"].json.status || \"Outage Corroborated\"}}\n*Action:* Rollback Canary v2.4.1"
+      },
+      "id": "33333333-3333-3333-3333-333333333333",
+      "name": "Slack War-Room Broadcaster",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [720, 200]
+    },
+    {
+      "parameters": {
+        "project": "SEV1",
+        "issueType": "Incident",
+        "summary": "={{$json.body.incident.title}}",
+        "description": "=Automated triage by NexusFlow Agentic Orchestrator and TinyFish Web Agent."
+      },
+      "id": "44444444-4444-4444-4444-444444444444",
+      "name": "Jira Service Management Sync",
+      "type": "n8n-nodes-base.jira",
+      "typeVersion": 1,
+      "position": [720, 400]
+    }
+  ],
+  "connections": {
+    "NexusFlow Incident Webhook": {
+      "main": [
+        [
+          {
+            "node": "TinyFish AI Web Agent Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TinyFish AI Web Agent Node": {
+      "main": [
+        [
+          {
+            "node": "Slack War-Room Broadcaster",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Jira Service Management Sync",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -63,6 +63,22 @@ export class WorkflowDAGEngine {
           dependencies: ['node-decision']
         },
         {
+          id: 'node-tinyfish',
+          label: 'TinyFish AI Web Agent Diagnostics',
+          agentRole: 'Autonomous Browser Inspector',
+          status: 'completed',
+          outputSummary: 'TinyFish Cloud Fleet inspected target DOM & verified 502 error telemetry.',
+          dependencies: ['node-decision']
+        },
+        {
+          id: 'node-n8n',
+          label: 'n8n Enterprise Workflow Synchronization',
+          agentRole: 'Enterprise Orchestration Engine',
+          status: 'completed',
+          outputSummary: 'Triggered n8n multi-system pipeline with TinyFish community node integration.',
+          dependencies: ['node-decision']
+        },
+        {
           id: 'node-rollback',
           label: 'AWS Cluster Rollback Verification',
           agentRole: 'Cloud Infrastructure Automator',
@@ -83,6 +99,22 @@ export class WorkflowDAGEngine {
       );
     } else {
       nodes.push(
+        {
+          id: 'node-tinyfish',
+          label: 'TinyFish AI Web Agent Telemetry',
+          agentRole: 'Autonomous Browser Inspector',
+          status: 'completed',
+          outputSummary: 'TinyFish Cloud Fleet verified endpoint health and diagnostic metrics.',
+          dependencies: ['node-decision']
+        },
+        {
+          id: 'node-n8n',
+          label: 'n8n Enterprise Workflow Synchronization',
+          agentRole: 'Enterprise Orchestration Engine',
+          status: 'completed',
+          outputSummary: 'Dispatched incident metadata to n8n automated workflow canvas.',
+          dependencies: ['node-decision']
+        },
         {
           id: 'node-exec',
           label: 'Automated Action Dispatcher',

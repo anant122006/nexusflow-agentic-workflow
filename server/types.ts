@@ -42,11 +42,31 @@ export interface DecisionBranch {
 }
 
 export interface ActionPayload {
-  actionType: 'JIRA_ESCALATION' | 'SLACK_ONCALL' | 'AWS_ROLLBACK' | 'CUSTOMER_EMAIL' | 'REFUND_DISPATCH';
+  actionType: 'JIRA_ESCALATION' | 'SLACK_ONCALL' | 'AWS_ROLLBACK' | 'CUSTOMER_EMAIL' | 'REFUND_DISPATCH' | 'TINYFISH_WEB_INSPECTION' | 'N8N_WORKFLOW_TRIGGER';
   targetDestination: string;
   summary: string;
   details: Record<string, any>;
   status: 'DISPATCHED' | 'HELD_FOR_APPROVAL' | 'RESOLVED';
+}
+
+export interface TinyFishReport {
+  sessionId: string;
+  targetUrl: string;
+  goal: string;
+  status: 'OUTAGE_VERIFIED' | 'DEGRADED_PERFORMANCE' | 'HEALTHY' | 'ANALYSIS_COMPLETE';
+  domFinding: string;
+  httpStatus: number;
+  latencyMs: number;
+  screenshotCaptured: boolean;
+  browserStepsExecuted: string[];
+}
+
+export interface N8nSyncReport {
+  workflowId: string;
+  webhookUrl: string;
+  status: 'DISPATCHED' | 'ACKNOWLEDGED';
+  connectedNodes: string[];
+  dispatchedAt: string;
 }
 
 export interface WorkflowResult {
@@ -59,6 +79,8 @@ export interface WorkflowResult {
   nodes: WorkflowNode[];
   actionsDispatched: ActionPayload[];
   executionTimeMs: number;
+  tinyfishReport?: TinyFishReport;
+  n8nSyncReport?: N8nSyncReport;
   /** Legacy demo field. New runs omit token estimates. */
   tokenSavingsPercentage?: number;
   logs: Array<{
